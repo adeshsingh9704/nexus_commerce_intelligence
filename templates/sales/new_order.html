@@ -1,0 +1,51 @@
+
+{% extends "customers/base.html" %}
+{% block title %}Create Sale{% endblock %}
+
+{% block content %}
+<h1>Create New Sale</h1>
+<p class="muted">Record a customer purchase or walk-in transaction.</p>
+
+<div class="card">
+    <form method="POST">
+
+        <label>Customer</label>
+        <select name="customer_id">
+            <option value="">Walk-in Customer</option>
+            {% for c in customers %}
+            <option value="{{ c.customer_id }}">
+                {{ c.name }} - {{ c.customer_id }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Product</label>
+        <select name="product_id" required>
+            {% for p in products %}
+            <option value="{{ p.product_id }}">
+                {{ p.name }} | Stock: {{ p.stock }} | {{ p.currency or "INR" }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity"
+               min="1" value="1" required>
+
+        <label>Sales Channel</label>
+        <select name="channel">
+            <option value="physical_store">Physical Store</option>
+            <option value="online">Online</option>
+        </select>
+
+        <button class="btn" type="submit">
+            Complete Sale
+        </button>
+
+        <a class="btn secondary"
+           href="{{ url_for('sales.list_orders') }}">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

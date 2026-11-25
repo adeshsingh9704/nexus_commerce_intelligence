@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Customers{% endblock %} | NEXUS</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #17243b;
+        }
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 235px;
+            padding: 28px 17px;
+            background: #101d35;
+            color: white;
+        }
+        .brand { font-size: 21px; font-weight: 800; margin: 0 0 8px; }
+        .subtitle { color: #9eacc3; font-size: 11px; letter-spacing: 2px; margin-bottom: 35px; }
+        .nav a {
+            display: block;
+            color: #b8c5d9;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .nav a.active, .nav a:hover { background: #243a5c; color: white; }
+        .main { margin-left: 235px; padding: 30px 36px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .topbar small { color: #7c8ba2; }
+        .content { max-width: 1200px; }
+        .card {
+            background: white;
+            border: 1px solid #e7edf5;
+            border-radius: 13px;
+            padding: 23px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 18px rgba(25, 45, 75, .04);
+        }
+        h1 { margin: 0 0 7px; font-size: 27px; }
+        h2 { font-size: 18px; margin-top: 0; }
+        p.muted { color: #78879d; margin-top: 0; }
+        .btn {
+            display: inline-block;
+            background: #2864df;
+            color: white;
+            border: 0;
+            border-radius: 8px;
+            padding: 11px 16px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn.secondary { background: #eaf0fb; color: #2856a5; }
+        .btn.danger { background: #c63e4b; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce4ef;
+            border-radius: 8px;
+            margin: 7px 0 16px;
+            font-size: 14px;
+        }
+        label { font-size: 13px; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #edf1f6; font-size: 13px; }
+        th { color: #77869b; font-weight: 600; }
+        td { color: #263650; }
+        .flash { padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; background: #e7f7ee; color: #176b3c; }
+        .flash.error { background: #fff0f0; color: #a52e38; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        @media(max-width: 760px) {
+            .sidebar { position: static; width: 100%; }
+            .main { margin-left: 0; padding: 20px 14px; }
+            .nav { display: flex; flex-wrap: wrap; }
+            .topbar { align-items: flex-start; gap: 12px; }
+            table { min-width: 650px; }
+            .table-wrap { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">NEXUS</div>
+        <div class="subtitle">COMMERCE INTELLIGENCE</div>
+        <nav class="nav">
+            <a href="/">Overview</a>
+            <a class="active" href="{{ url_for('customers.customer_list') }}">Customers</a>
+            <a href="{{ url_for('products.product_list') }}">Products</a>
+            <a class="nav-link" href="{{ url_for('sales.list_orders') }}">
+    ▤ &nbsp; Sales & Orders
+</a>
+           
+<a class="nav-link" href="{{ url_for('modules.inventory') }}">
+    ▦ &nbsp; Inventory
+</a>
+
+<a class="nav-link" href="{{ url_for('modules.analytics') }}">
+    ◷ &nbsp; Analytics
+</a>
+
+<a class="nav-link" href="{{ url_for('modules.forecasting') }}">
+    ✧ &nbsp; AI Forecasting
+</a>
+
+<a class="nav-link" href="{{ url_for('modules.supplier_list') }}">
+    ♧ &nbsp; Suppliers
+</a>
+
+<a class="nav-link" href="{{ url_for('modules.purchase_order_list') }}">
+    ▤ &nbsp; Purchase Orders
+</a>
+
+<a class="nav-link" href="{{ url_for('modules.reports') }}">
+    ⇩ &nbsp; Reports & Export
+</a>
+
+        </nav>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <strong>NEXUS Workspace</strong><br>
+                <small>Commerce management platform</small>
+            </div>
+            <small>Customer Management</small>
+        </div>
+
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash {{ 'error' if category == 'error' else '' }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

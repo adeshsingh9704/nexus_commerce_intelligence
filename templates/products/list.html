@@ -1,0 +1,98 @@
+
+{% extends "customers/base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div>
+        <h1>Product Management</h1>
+        <p class="muted">Manage your catalogue, prices and stock levels.</p>
+    </div>
+    <a class="btn" href="{{ url_for('products.add_product') }}">+ Add Product</a>
+</div>
+
+<div class="card">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="muted">Total Products</p>
+            <h2>{{ total }}</h2>
+        </div>
+        <div class="col-md-4">
+            <p class="muted">Low Stock (filtered results)</p>
+            <h2>{{ low_count }}</h2>
+        </div>
+        <div class="col-md-4">
+            <p class="muted">Out of Stock (filtered results)</p>
+            <h2>{{ out_count }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <form method="GET" action="{{ url_for('products.product_list') }}">
+        <label for="q">Search Products</label>
+        <input id="q" name="q" value="{{ search }}"
+               placeholder="Search by product name, ID or category">
+
+        <label for="status">Stock Status</label>
+        <select id="status" name="status"
+                style="width:100%;padding:12px;border:1px solid #dce4ef;border-radius:8px;margin:7px 0 16px;">
+            <option value="" {% if not status %}selected{% endif %}>All Products</option>
+            <option value="low" {% if status == 'low' %}selected{% endif %}>Low Stock</option>
+            <option value="out" {% if status == 'out' %}selected{% endif %}>Out of Stock</option>
+        </select>
+
+        <button class="btn" type="submit">Apply Filters</button>
+        <a class="btn secondary" href="{{ url_for('products.product_list') }}">Reset</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Product Catalogue</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Cost Price</th>
+                    <th>Selling Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.product_id }}</td>
+                    <td><strong>{{ product.name }}</strong></td>
+                    <td>{{ product.category }}</td>
+                    <td>₹{{ "%.2f"|format(product.display_cost|float) }}</td>
+                    <td>₹{{ "%.2f"|format(product.display_price|float) }}</td>
+                    <td>{{ product.display_stock }}</td>
+                    <td>
+                        {% if product.display_stock <= 0 %}
+                            <span style="color:#c63e4b;font-weight:bold;">Out of stock</span>
+                        {% elif product.display_stock <= product.display_reorder %}
+                            <span style="color:#c17b16;font-weight:bold;">Low stock</span>
+                        {% else %}
+                            <span style="color:#16834b;font-weight:bold;">In stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn secondary"
+                           href="{{ url_for('products.edit_product', product_id=product.product_id) }}">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8">No products found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

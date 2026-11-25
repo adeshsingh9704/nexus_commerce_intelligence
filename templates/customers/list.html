@@ -1,0 +1,70 @@
+
+{% extends "customers/base.html" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div>
+        <h1>Customers</h1>
+        <p class="muted">Manage customer profiles and relationships.</p>
+    </div>
+    <a class="btn" href="{{ url_for('customers.add_customer') }}">+ Add Customer</a>
+</div>
+
+<div class="card">
+    <h2>Customer Overview</h2>
+    <h1>{{ total }}</h1>
+    <p class="muted">Total registered customers</p>
+</div>
+
+<div class="card">
+    <form method="GET" action="{{ url_for('customers.customer_list') }}">
+        <label for="q">Search customers</label>
+        <div class="actions">
+            <input id="q" name="q" value="{{ search }}"
+                   placeholder="Search by name, phone or customer ID">
+            <button class="btn" type="submit">Search</button>
+            <a class="btn secondary" href="{{ url_for('customers.customer_list') }}">Reset</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Customer Directory</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.customer_id }}</td>
+                    <td><strong>{{ customer.name }}</strong></td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.email or "—" }}</td>
+                    <td>{{ customer.city or "—" }}</td>
+                    <td>
+                        <a class="btn secondary"
+                           href="{{ url_for('customers.customer_detail', customer_id=customer.customer_id) }}">
+                           View
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No customers found. Add your first customer to get started.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
